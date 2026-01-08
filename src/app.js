@@ -11,7 +11,7 @@ app.post("/signup",async(req,res)=>{
     
 
     try {
-        const user = req.body;
+        const user = new userisntance(req.body);
 
     console.log(user);
         await user.save();
