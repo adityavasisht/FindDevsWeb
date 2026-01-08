@@ -4,16 +4,16 @@ const {authAdmin,authUser} = require("./middlewares/auth")
 const { connectDB} = require("./config/database");
 const userisntance = require('./models/user.js')
 
+
+
+app.use(express.json());
 app.post("/signup",async(req,res)=>{
-    const user = new userisntance({
-        firstname: "Aditya",
-        lastname: "Vasisht",
-        age: "22",
-        emailId: "aditya@gmai;.com",
-        password:"1234",
-        gender: "male"
-    })
+    
+
     try {
+        const user = req.body;
+
+    console.log(user);
         await user.save();
     res.send("user created successfully");
         
