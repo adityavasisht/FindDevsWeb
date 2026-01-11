@@ -20,15 +20,27 @@ app.post("/signup",async(req,res)=>{
     try {
         const user = new User(req.body);
 
-    console.log(user);
-        await user.save();
+    // console.log(user);
+        await user.save(user);
     res.send("user created successfully");
         
     } catch (error) {
         res.send(error);
         
     }
-})
+});
+app.patch("/updateEmailId", async(req,res)=>{
+    try {
+        const emailId = req.body.emailId;
+        const newEmailId = req.body.newEmailId;
+        await User.findOneAndUpdate({emailId}, {emailId: newEmailId});
+        res.send("user's emailId updated successfully");
+        
+    } catch (error) {
+        res.send(error);
+        
+    }
+});
 
 connectDB().then(()=>{
     app.listen(3000,()=>{
