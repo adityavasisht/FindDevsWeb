@@ -31,9 +31,25 @@ app.post("/signup",async(req,res)=>{
 });
 app.patch("/updateEmailId", async(req,res)=>{
     try {
-        const emailId = req.body.emailId;
-        const newEmailId = req.body.newEmailId;
-        await User.findOneAndUpdate({emailId}, {emailId: newEmailId});
+
+        const ALLOWED_UPDATES = [
+            "photoUrl","bio","about","skills","gender","password"
+        ]
+        const {emailId,...data} = req.body;
+        if(!emailId){
+            res.status(400).send("You need to give your emailId.");
+        }
+        const updates = {};
+
+        for(const key of ALLOWED_UPDATES){
+            if(data[key]!== undefined){
+                updates[key] = data[key];
+            }
+        }
+
+        
+        await User.findOneAndUpdate({emailId},{$set: updates});
+        console.log(updates);
         res.send("user's emailId updated successfully");
         
     } catch (error) {

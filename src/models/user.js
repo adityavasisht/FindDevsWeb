@@ -1,5 +1,6 @@
 const { error } = require('console');
 const mongoose = require('mongoose');
+const validator = require('validator');
 
 
 const UserSchema = new mongoose.Schema({
@@ -7,34 +8,59 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true,
         maxlength: 50,
-        minlength: 3
+        minlength: 3,
+        trim: true
+        
         
     },
     lastname:{
         type: String,
         required: true,
         maxlength: 50,
-        minlength: 3
+        minlength: 3,
+        trim: true
     },
     age:{
         type: Number,
         required: true,
         min:18,
-        max: 60 
+        max: 60 ,
+        trim: true
     },
     emailId:{
         type: String,
         required: true,
         lowercase: true,
+        trim: true,
+        validat: {
+            validator: (value)=>{
+                return validator.isEmail(value);
+            },
+            message: "Invalid email format"
+        }
     },
     password:{
         type: String,
         required: true,
+        trim: true,
+        validate:{
+            validator: (value)=>{
+                return validator.isStrongPassword(value,{
+                    minLength: 6,
+                    minLowercase:1,
+                    minNumbers:1,
+                    minSymbols:1,
+                    minUppercase:1,
+                })
+            },
+            message:"Your password is not strong, enter a strong password."
+        }
     },
     gender:{
         type: String,
         required: true,
         lowercase: true,
+        trim: true,
         validate: {
             validator: (value)=>{
                 return ["male", "female", "others"].includes(value);
@@ -44,11 +70,18 @@ const UserSchema = new mongoose.Schema({
         },
     photoUrl:{
         type: String,
-        default: "https://www.cornwallbusinessawards.co.uk/2018-judging-panel/dummy450x450/"
+        trim: true,
+        default: "https://www.cornwallbusinessawards.co.uk/2018-judging-panel/dummy450x450/",
+        validate:{ 
+        validator: v =>  validator.isURL(v),
+        message:"your url is not valid."
+        }
+
     },
     about:{
         type: String,
         default: "This is the default about of the user!",
+        
     },
     bio:{
         type: String,
@@ -57,7 +90,8 @@ const UserSchema = new mongoose.Schema({
     },
     skills:{
         type: [String],
-        required: true
+        required: true,
+        trim: true
     }                    
     },
     {
