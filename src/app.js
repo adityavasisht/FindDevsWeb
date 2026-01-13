@@ -4,6 +4,8 @@ const {authAdmin,authUser} = require("./middlewares/auth")
 const { connectDB} = require("./config/database");
 const User = require('./models/user.js')
 
+const bcrypt = require('bcrypt');
+
 
 
 app.use(express.json());
@@ -14,11 +16,38 @@ app.get("/userInfo", async(req,res)=>{
     res.send(user);
 
 })
+app.get("/login", async(req,res)=>{
+    try {
+        const {email, password} =req.body;
+        const user = await User.find({emailId: email});
+        if(!user){
+            res.status(404).send("user not found");
+        }
+        bcrypt.compare(password, user )
+        
+    } catch (error) {
+        
+    }
+})
 app.post("/signup",async(req,res)=>{
+
     
 
     try {
-        const user = new User(req.body);
+        const {firstname, lastname, emailId, password} = req.body;
+
+        const user  = new User({
+            firstname,
+            lastname,
+            emailId,
+            password: hashedpassword
+        })
+        const hashedpassword = async(password)=>{
+            const hashed = await bcrypt.hash(password, 10);
+            return hashed;
+        }
+
+
 
     // console.log(user);
         await user.save(user);
