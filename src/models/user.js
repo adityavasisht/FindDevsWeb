@@ -22,7 +22,6 @@ const UserSchema = new mongoose.Schema({
     },
     age:{
         type: Number,
-        required: true,
         min:18,
         max: 60 ,
         trim: true
@@ -58,7 +57,6 @@ const UserSchema = new mongoose.Schema({
     },
     gender:{
         type: String,
-        required: true,
         lowercase: true,
         trim: true,
         validate: {
@@ -85,12 +83,10 @@ const UserSchema = new mongoose.Schema({
     },
     bio:{
         type: String,
-        required: true,
         
     },
     skills:{
         type: [String],
-        required: true,
         trim: true
     }                    
     },
