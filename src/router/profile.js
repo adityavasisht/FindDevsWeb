@@ -2,6 +2,7 @@ const express = require('express');
 const profileRouter = express.Router();
 const {authuser} = require("../middlewares/auth.js")
 const User = require('../models/user.js')
+const validateEditProfileData = require("../utils/validate.js");
 
 
 profileRouter.get("/profile", authuser,(req,res)=>{
@@ -17,28 +18,15 @@ profileRouter.get("/profile", authuser,(req,res)=>{
 });
 
 
-profileRouter.patch("/update", async(req,res)=>{
+profileRouter.patch("/update",authuser, async(req,res)=>{
     try {
 
-        const ALLOWED_UPDATES = [
-            "photoUrl","bio","about","skills","gender","password"
-        ]
-        const {emailId,...data} = req.body;
-        if(!emailId){
-            res.status(400).send("You need to give your emailId.");
+        if(!validateEditProfileData(req)){
+            return res.status(400).send("invalid edit request");
         }
-        const updates = {};
-
-        for(const key of ALLOWED_UPDATES){
-            if(data[key]!== undefined){
-                updates[key] = data[key];
-            }
-        }
-
-        
-        await User.findOneAndUpdate({emailId},{$set: updates});
-        console.log(updates);
-        res.send("user's emailId updated successfully");
+        const user = req.user;
+        Object.keys(req.body).forEach((key)=> (user[key] = req.body[key]) );
+        await user.save();
         
     } catch (error) {
         res.send(error);

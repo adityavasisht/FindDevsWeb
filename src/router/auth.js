@@ -38,7 +38,7 @@ authRouter.post("/login", async (req, res) => {
       console.log("USER NOT FOUND");
       return res.status(404).send("user not found");
     }
-    
+
     const passwordCorrect = await bcrypt.compare(
       password,
       user.password
@@ -57,5 +57,12 @@ authRouter.post("/login", async (req, res) => {
     res.status(500).send("something went wrong");
   }
 });
+
+authRouter.post("/logout", async(req,res)=>{
+  res.cookie("token", null,{
+    expires : new Date(Date.now()),
+  })
+  res.send("logged out successfully!");
+})
 
 module.exports = authRouter;
