@@ -14,6 +14,9 @@ reqRouter.post("/request/send/:status/:toUserId",authuser, async(req,res)=>{
     if(!ALLOWED_STATUS.includes(status)){
         return res.status(400).send("status is not valid");
     }
+    if(fromUserId===toUserId){
+        return res.status(400).res("You cant send req to yourself");
+    }
     const checkReqValidity = await connectionReq.findOne({
         $or:[
             {fromUserId,toUserId},
