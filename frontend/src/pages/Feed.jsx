@@ -99,7 +99,7 @@ function Feed() {
     return (
       <div className="feed-container">
         <div className="feed-header">
-          <h1>DevTinder</h1>
+          <h1>FindDevs</h1>
           <div className="header-actions">
             <button onClick={() => navigate('/requests')} className="icon-button" title="Requests">
               <FaComments />
