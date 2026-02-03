@@ -46,7 +46,7 @@ function Signup() {
       <div className="auth-card">
         <div className="auth-header">
           <FaHeart className="auth-logo" />
-          <h1>DevTinder</h1>
+          <h1>FindDevs</h1>
           <p>Create your account</p>
         </div>
 
