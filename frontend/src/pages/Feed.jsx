@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getFeed, sendRequest } from '../services/api'
 import UserCard from '../components/UserCard'
-import { FaUser, FaHeart, FaComments, FaUsers } from 'react-icons/fa'
+import { FaUser, FaHeart, FaComments, FaUsers, FaCrown } from 'react-icons/fa'
 import './Feed.css'
 
 function Feed() {
@@ -133,6 +133,9 @@ function Feed() {
       <div className="feed-header">
         <h1>DevTinder</h1>
         <div className="header-actions">
+          <button onClick={() => navigate('/payment')} className="premium-header-button" title="Get Premium">
+            <FaCrown /> Premium
+          </button>
           <button onClick={() => navigate('/requests')} className="icon-button" title="Requests">
             <FaComments />
           </button>

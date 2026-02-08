@@ -1,11 +1,15 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './context/AuthContext'
+import { Provider } from 'react-redux'; // <--- 1. Import Provider
+import appStore from './utils/appStore'; // <--- 2. Import your Store (Check this path!)
+
 import Login from './pages/Login'
 import Signup from './pages/Signup'
 import Feed from './pages/Feed'
 import Profile from './pages/Profile'
 import Requests from './pages/Requests'
 import Connections from './pages/Connections'
+import PaymentComponent from './pages/PaymentComponent'
 import './App.css'
 
 function AppRoutes() {
@@ -45,6 +49,10 @@ function AppRoutes() {
         path="/connections" 
         element={isAuthenticated ? <Connections /> : <Navigate to="/login" />} 
       />
+      <Route
+        path="/payment"
+        element={isAuthenticated ? <PaymentComponent /> : <Navigate to="/login" />}
+      />
       <Route path="/" element={<Navigate to={isAuthenticated ? "/feed" : "/login"} />} />
     </Routes>
   )
@@ -52,13 +60,15 @@ function AppRoutes() {
 
 function App() {
   return (
-    <AuthProvider>
-      <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-        <AppRoutes />
-      </Router>
-    </AuthProvider>
+    // 3. Wrap everything in the Provider
+    <Provider store={appStore}> 
+      <AuthProvider>
+        <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <AppRoutes />
+        </Router>
+      </AuthProvider>
+    </Provider>
   )
 }
 
 export default App
-

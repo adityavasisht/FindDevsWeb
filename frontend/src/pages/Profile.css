@@ -125,6 +125,27 @@
   transform: translateY(-2px);
 }
 
+.premium-button {
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+  color: #333;
+  border-radius: 10px;
+  font-size: 18px;
+  font-weight: 600;
+  margin-top: 15px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.premium-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4);
+}
+
 .profile-form {
   display: flex;
   flex-direction: column;

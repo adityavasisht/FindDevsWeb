@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { getProfile, updateProfile } from '../services/api'
-import { FaHeart, FaHome, FaSignOutAlt } from 'react-icons/fa'
+import { FaHeart, FaHome, FaSignOutAlt, FaCrown } from 'react-icons/fa'
 import './Profile.css'
 
 function Profile() {
@@ -154,6 +154,10 @@ function Profile() {
 
               <button onClick={() => setIsEditing(true)} className="edit-button">
                 Edit Profile
+              </button>
+
+              <button onClick={() => navigate('/payment')} className="premium-button">
+                <FaCrown /> Get FindDevs Premium
               </button>
             </div>
           </>
