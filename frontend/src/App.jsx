@@ -54,7 +54,9 @@ function AppRoutes() {
         element={isAuthenticated ? <PaymentComponent /> : <Navigate to="/login" />}
       />
       <Route path="/" element={<Navigate to={isAuthenticated ? "/feed" : "/login"} />} />
+      <Route path="/chat/:targetUserId" element={<Chat />} />
     </Routes>
+    
   )
 }
 
