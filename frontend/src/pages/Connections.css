@@ -206,3 +206,34 @@
   }
 }
 
+/* Add inside Connections.css */
+
+.connection-actions {
+  margin-top: 15px;
+  border-top: 1px solid #eee;
+  padding-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.chat-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #4f46e5; /* Indigo color (Tailwind-like) */
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.chat-button:hover {
+  background-color: #4338ca;
+}
+
+.chat-icon {
+  font-size: 1rem;
+}

@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getConnections } from '../services/api'
-import { FaHome, FaUser, FaCode } from 'react-icons/fa'
+// 1. Added FaComment import for the chat icon
+import { FaHome, FaUser, FaCode, FaComment } from 'react-icons/fa' 
 import './Connections.css'
 
 function Connections() {
@@ -25,6 +26,11 @@ function Connections() {
     } finally {
       setLoading(false)
     }
+  }
+
+  // 2. Helper function to handle chat navigation
+  const handleChat = (targetUserId) => {
+    navigate('/chat/' + targetUserId)
   }
 
   if (loading) {
@@ -96,6 +102,17 @@ function Connections() {
                   )}
                 </div>
               </div>
+              
+              
+              <div className="connection-actions">
+                <button 
+                  className="chat-button" 
+                  onClick={() => handleChat(user._id)}
+                >
+                  <FaComment className="chat-icon" /> Chat
+                </button>
+              </div>
+
             </div>
           ))
         )}
@@ -105,4 +122,3 @@ function Connections() {
 }
 
 export default Connections
-
