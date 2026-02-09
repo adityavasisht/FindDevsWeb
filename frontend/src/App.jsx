@@ -10,6 +10,7 @@ import Profile from './pages/Profile'
 import Requests from './pages/Requests'
 import Connections from './pages/Connections'
 import PaymentComponent from './pages/PaymentComponent'
+import Chat from './pages/Chat';
 import './App.css'
 
 function AppRoutes() {
