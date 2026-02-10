@@ -34,7 +34,7 @@ const PaymentComponent = () => {
 
     try {
         // 3. Send the userId from Context to your Backend
-        const result = await axios.post("http://localhost:3000/create", 
+        const result = await axios.post("/api/create", 
             {},
             {withCredentials: true},
              
@@ -66,7 +66,7 @@ const PaymentComponent = () => {
                 };
 
                 // Verify the payment
-                const verifyResult = await axios.post("http://localhost:3000/verify", data);
+                const verifyResult = await axios.post("api/verify", data);
                 alert(verifyResult.data.message || "Payment Successful!");
             },
             
