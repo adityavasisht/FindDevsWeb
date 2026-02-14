@@ -59,7 +59,7 @@ export const getProfile = async () => {
 }
 
 export const updateProfile = async (profileData) => {
-  const response = await api.patch('/update', profileData)
+  const response = await api.patch('/profile/edit', prfileData)
   return response.data
 }
 
