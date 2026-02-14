@@ -10,20 +10,18 @@ const api = axios.create({
   },
 })
 
-// Add response interceptor to handle errors
+
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    // Don't log 401 errors for checkAuth - they're expected when not logged in
     if (error.config?.url === '/profile' && error.response?.status === 401) {
-      // Silently handle 401 for profile check
       return Promise.reject(error)
     }
     return Promise.reject(error)
   }
 )
 
-// Auth APIs
+
 export const signup = async (userData) => {
   const response = await api.post('/signup', userData)
   return response.data
@@ -44,7 +42,6 @@ export const checkAuth = async () => {
     const response = await api.get('/profile')
     return response.data
   } catch (error) {
-    // 401 is expected when not logged in, so we don't need to log it
     if (error.response?.status === 401) {
       return null
     }
@@ -52,18 +49,19 @@ export const checkAuth = async () => {
   }
 }
 
-// Profile APIs
+
 export const getProfile = async () => {
   const response = await api.get('/profile')
   return response.data
 }
 
 export const updateProfile = async (profileData) => {
+
   const response = await api.patch('/profile/edit', profileData)
   return response.data
 }
 
-// User Feed APIs
+
 export const getFeed = async (page = 1, limit = 10) => {
   const response = await api.get('/feed', {
     params: { page, limit }
@@ -71,7 +69,7 @@ export const getFeed = async (page = 1, limit = 10) => {
   return response.data
 }
 
-// Connection Request APIs
+
 export const sendRequest = async (toUserId, status) => {
   const response = await api.post(`/request/send/${status}/${toUserId}`)
   return response.data
@@ -82,7 +80,7 @@ export const reviewRequest = async (requestId, status) => {
   return response.data
 }
 
-// Connections APIs
+
 export const getReceivedRequests = async () => {
   const response = await api.get('/user/requests/recieved')
   return response.data
@@ -94,4 +92,3 @@ export const getConnections = async () => {
 }
 
 export default api
-
