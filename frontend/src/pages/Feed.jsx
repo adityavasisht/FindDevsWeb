@@ -31,7 +31,7 @@ function Feed() {
       setUsers(validUsers)
       setCurrentIndex(0)
       
-      if (validUsers.length === 0) {
+      if (!validUsers || validUsers.length === 0) {
         console.log('No users in feed')
       }
     } catch (error) {
@@ -77,7 +77,8 @@ function Feed() {
     try {
       const page = Math.floor(users.length / 10) + 1
       const newUsers = await getFeed(page, 10)
-      // Filter new users too
+      
+      // Fix: Filter new users too
       const validNewUsers = (newUsers || []).filter(u => u != null)
       
       if (validNewUsers.length > 0) {
