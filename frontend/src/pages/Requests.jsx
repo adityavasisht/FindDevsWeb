@@ -72,6 +72,9 @@ function Requests() {
         ) : (
           requests.map((request) => {
             const user = request.fromUserId
+            // === FIX: Handle deleted users ===
+            if (!user) return null;
+
             return (
               <div key={request._id} className="request-card">
                 <div className="request-user-info">
@@ -116,4 +119,3 @@ function Requests() {
 }
 
 export default Requests
-
