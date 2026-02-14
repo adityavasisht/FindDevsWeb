@@ -23,22 +23,25 @@ function Feed() {
       console.log('Loading feed...')
       const data = await getFeed(1, 20)
       console.log('Feed data received:', data)
-      console.log('Number of users:', data?.length || 0)
-      setUsers(data || [])
+      
+      // === FIX: Filter out null/undefined users ===
+      const validUsers = (data || []).filter(user => user != null)
+      console.log('Number of valid users:', validUsers.length)
+      
+      setUsers(validUsers)
       setCurrentIndex(0)
-      if (!data || data.length === 0) {
-        console.log('No users in feed - this might be normal if you have no other users or have swiped on everyone')
+      
+      if (validUsers.length === 0) {
+        console.log('No users in feed')
       }
     } catch (error) {
       console.error('Error loading feed:', error)
-      console.error('Error response:', error.response)
       if (error.response?.status === 401) {
         setError('Please log in to view the feed')
         setTimeout(() => navigate('/login'), 2000)
       } else {
         const errorMessage = error.response?.data || error.message || 'Failed to load feed'
         setError(errorMessage)
-        console.error('Feed error message:', errorMessage)
       }
     } finally {
       setLoading(false)
@@ -50,6 +53,12 @@ function Feed() {
 
     const currentUser = users[currentIndex]
     
+    // Safety check
+    if (!currentUser) {
+        setCurrentIndex(prev => prev + 1)
+        return
+    }
+
     try {
       await sendRequest(currentUser._id, status)
       setCurrentIndex(prev => prev + 1)
@@ -68,8 +77,11 @@ function Feed() {
     try {
       const page = Math.floor(users.length / 10) + 1
       const newUsers = await getFeed(page, 10)
-      if (newUsers.length > 0) {
-        setUsers(prev => [...prev, ...newUsers])
+      // Filter new users too
+      const validNewUsers = (newUsers || []).filter(u => u != null)
+      
+      if (validNewUsers.length > 0) {
+        setUsers(prev => [...prev, ...validNewUsers])
       }
     } catch (error) {
       console.error('Failed to load more users:', error)
@@ -157,21 +169,23 @@ function Feed() {
 
       <div className="cards-container">
         {users.slice(currentIndex, currentIndex + 3).map((user, index) => (
-          <div
-            key={user._id}
-            className="card-wrapper"
-            style={{
-              zIndex: 3 - index,
-              position: index === 0 ? 'relative' : 'absolute',
-              top: index === 0 ? 0 : index * 10,
-              left: index === 0 ? 0 : index * 10,
-            }}
-          >
-            <UserCard
-              user={user}
-              onSwipe={index === 0 ? handleSwipe : () => {}}
-            />
-          </div>
+          user ? (
+            <div
+              key={user._id}
+              className="card-wrapper"
+              style={{
+                zIndex: 3 - index,
+                position: index === 0 ? 'relative' : 'absolute',
+                top: index === 0 ? 0 : index * 10,
+                left: index === 0 ? 0 : index * 10,
+              }}
+            >
+              <UserCard
+                user={user}
+                onSwipe={index === 0 ? handleSwipe : () => {}}
+              />
+            </div>
+          ) : null
         ))}
       </div>
 
@@ -183,4 +197,3 @@ function Feed() {
 }
 
 export default Feed
-
