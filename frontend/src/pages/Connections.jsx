@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getConnections } from '../services/api'
-// 1. Added FaComment import for the chat icon
 import { FaHome, FaUser, FaCode, FaComment } from 'react-icons/fa' 
 import './Connections.css'
 
@@ -19,7 +18,9 @@ function Connections() {
     try {
       setLoading(true)
       const data = await getConnections()
-      setConnections(data)
+      // === FIX: Filter out null/undefined users immediately ===
+      const validConnections = (data || []).filter(u => u != null)
+      setConnections(validConnections)
     } catch (error) {
       setError('Failed to load connections')
       console.error(error)
@@ -28,7 +29,6 @@ function Connections() {
     }
   }
 
-  // 2. Helper function to handle chat navigation
   const handleChat = (targetUserId) => {
     navigate('/chat/' + targetUserId)
   }
@@ -102,7 +102,6 @@ function Connections() {
                   )}
                 </div>
               </div>
-              
               
               <div className="connection-actions">
                 <button 
