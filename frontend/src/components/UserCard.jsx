@@ -4,6 +4,9 @@ import { FaHeart, FaTimes, FaCode, FaUser } from 'react-icons/fa'
 import './UserCard.css'
 
 function UserCard({ user, onSwipe }) {
+  // === FIX: Safety Check ===
+  if (!user) return null;
+
   const [exitX, setExitX] = useState(0)
   const x = useMotionValue(0)
   const rotate = useTransform(x, [-200, 200], [-25, 25])
@@ -102,4 +105,3 @@ function UserCard({ user, onSwipe }) {
 }
 
 export default UserCard
-
