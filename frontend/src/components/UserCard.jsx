@@ -4,7 +4,7 @@ import { FaHeart, FaTimes, FaCode, FaUser } from 'react-icons/fa'
 import './UserCard.css'
 
 function UserCard({ user, onSwipe }) {
-  // === FIX: Safety Check to prevent crashes ===
+  // === CRITICAL FIX: Safety check ===
   if (!user) return null;
 
   const [exitX, setExitX] = useState(0)
