@@ -1,57 +1,53 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getReceivedRequests, reviewRequest } from '../services/api'
-import { FaHome, FaCheck, FaTimes, FaUser } from 'react-icons/fa'
-import './Requests.css'
+import { getConnections } from '../services/api'
+import { FaHome, FaUser, FaCode, FaComment } from 'react-icons/fa' 
+import './Connections.css'
 
-function Requests() {
-  const [requests, setRequests] = useState([])
+function Connections() {
+  const [connections, setConnections] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const navigate = useNavigate()
 
   useEffect(() => {
-    loadRequests()
+    loadConnections()
   }, [])
 
-  const loadRequests = async () => {
+  const loadConnections = async () => {
     try {
       setLoading(true)
-      const data = await getReceivedRequests()
-      setRequests(data)
+      const data = await getConnections()
+      // === FIX: Filter out null users to prevent crashes ===
+      const validConnections = (data || []).filter(u => u != null)
+      setConnections(validConnections)
     } catch (error) {
-      setError('Failed to load requests')
+      setError('Failed to load connections')
       console.error(error)
     } finally {
       setLoading(false)
     }
   }
 
-  const handleReview = async (requestId, status) => {
-    try {
-      await reviewRequest(requestId, status)
-      await loadRequests()
-    } catch (error) {
-      setError(error.response?.data || 'Failed to update request')
-      console.error(error)
-    }
+  const handleChat = (targetUserId) => {
+    navigate('/chat/' + targetUserId)
   }
 
   if (loading) {
     return (
-      <div className="requests-container">
+      <div className="connections-container">
         <div className="loading-spinner"></div>
       </div>
     )
   }
 
   return (
-    <div className="requests-container">
-      <div className="requests-header">
+    <div className="connections-container">
+      <div className="connections-header">
         <button onClick={() => navigate('/feed')} className="header-button">
           <FaHome />
         </button>
-        <h1>Connection Requests</h1>
+        <h1>My Connections</h1>
         <div style={{ width: 45 }}></div>
       </div>
 
@@ -62,63 +58,66 @@ function Requests() {
         </div>
       )}
 
-      <div className="requests-list">
-        {requests.length === 0 ? (
-          <div className="empty-requests">
+      <div className="connections-list">
+        {connections.length === 0 ? (
+          <div className="empty-connections">
             <FaUser className="empty-icon" />
-            <h2>No requests yet</h2>
-            <p>When someone shows interest, you'll see it here</p>
+            <h2>No connections yet</h2>
+            <p>Start swiping to make connections!</p>
+            <button onClick={() => navigate('/feed')} className="go-to-feed-button">
+              Go to Feed
+            </button>
           </div>
         ) : (
-          requests.map((request) => {
-            const user = request.fromUserId;
-            
-            // === CRITICAL FIX START ===
-            // If the user was deleted, 'user' is null. We must skip it to prevent a crash.
-            if (!user) return null; 
-            // === CRITICAL FIX END ===
-
-            return (
-              <div key={request._id} className="request-card">
-                <div className="request-user-info">
-                  <img 
-                    src={user.photoUrl || 'https://via.placeholder.com/100?text=No+Photo'} 
-                    alt={`${user.firstname} ${user.lastname}`}
-                    className="request-avatar"
-                  />
-                  <div className="request-details">
-                    <h3>{user.firstname} {user.lastname}</h3>
-                    {user.bio && <p className="request-bio">{user.bio}</p>}
-                    {user.skills && user.skills.length > 0 && (
-                      <div className="request-skills">
-                        {user.skills.slice(0, 3).map((skill, index) => (
-                          <span key={index} className="skill-tag-small">{skill}</span>
+          connections.map((user) => (
+            <div key={user._id} className="connection-card">
+              <div className="connection-main">
+                <img 
+                  src={user.photoUrl || 'https://via.placeholder.com/120?text=No+Photo'} 
+                  alt={`${user.firstname} ${user.lastname}`}
+                  className="connection-avatar"
+                />
+                <div className="connection-info">
+                  <h3>{user.firstname} {user.lastname}</h3>
+                  {user.gender && (
+                    <p className="connection-gender">
+                      <FaUser /> {user.gender}
+                    </p>
+                  )}
+                  {user.bio && (
+                    <p className="connection-bio">{user.bio}</p>
+                  )}
+                  {user.about && (
+                    <p className="connection-about">{user.about}</p>
+                  )}
+                  {user.skills && user.skills.length > 0 && (
+                    <div className="connection-skills">
+                      <FaCode className="skills-icon" />
+                      <div className="skills-tags">
+                        {user.skills.map((skill, index) => (
+                          <span key={index} className="skill-tag">{skill}</span>
                         ))}
                       </div>
-                    )}
-                  </div>
-                </div>
-                <div className="request-actions">
-                  <button
-                    onClick={() => handleReview(request._id, 'accepted')}
-                    className="accept-button"
-                  >
-                    <FaCheck /> Accept
-                  </button>
-                  <button
-                    onClick={() => handleReview(request._id, 'rejected')}
-                    className="reject-button"
-                  >
-                    <FaTimes /> Reject
-                  </button>
+                    </div>
+                  )}
                 </div>
               </div>
-            )
-          })
+              
+              <div className="connection-actions">
+                <button 
+                  className="chat-button" 
+                  onClick={() => handleChat(user._id)}
+                >
+                  <FaComment className="chat-icon" /> Chat
+                </button>
+              </div>
+
+            </div>
+          ))
         )}
       </div>
     </div>
   )
 }
 
-export default Requests
+export default Connections
