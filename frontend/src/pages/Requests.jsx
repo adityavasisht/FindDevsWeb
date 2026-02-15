@@ -71,10 +71,10 @@ function Requests() {
           </div>
         ) : (
           requests.map((request) => {
-            const user = request.fromUserId;
+            const user = request.fromUserId
             
-            // === FIX: Handle deleted users safely ===
-            if (!user) return null; 
+            // === CRITICAL FIX: Skip null users ===
+            if (!user) return null;
 
             return (
               <div key={request._id} className="request-card">
