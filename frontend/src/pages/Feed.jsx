@@ -20,11 +20,12 @@ function Feed() {
     try {
       setLoading(true)
       setError('')
-      console.log('Loading feed...')
+      console.log('Loading feed... (FIXED VERSION)') // <--- Check for this log!
+      
       const data = await getFeed(1, 20)
       console.log('Feed data received:', data)
       
-      // === FIX: Filter out null/undefined users ===
+      // === FIX 1: Filter out null users ===
       const validUsers = (data || []).filter(user => user != null)
       console.log('Number of valid users:', validUsers.length)
       
@@ -53,7 +54,7 @@ function Feed() {
 
     const currentUser = users[currentIndex]
     
-    // Safety check
+    // === FIX 2: Safety check ===
     if (!currentUser) {
         setCurrentIndex(prev => prev + 1)
         return
@@ -63,7 +64,6 @@ function Feed() {
       await sendRequest(currentUser._id, status)
       setCurrentIndex(prev => prev + 1)
       
-      // Load more users if we're running low
       if (currentIndex >= users.length - 3) {
         loadMoreUsers()
       }
@@ -78,7 +78,7 @@ function Feed() {
       const page = Math.floor(users.length / 10) + 1
       const newUsers = await getFeed(page, 10)
       
-      // Fix: Filter new users too
+      // === FIX 3: Filter new users ===
       const validNewUsers = (newUsers || []).filter(u => u != null)
       
       if (validNewUsers.length > 0) {
